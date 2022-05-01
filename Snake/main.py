@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
 print('hello world')
-print('this is the OOPfying branch')
 
 
 class Game:
