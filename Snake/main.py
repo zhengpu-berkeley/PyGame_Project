@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 print('hello world')
+print('this is the unOOPed prototype with comments that may be useful to refer back to')
 
 
 def draw_block():
