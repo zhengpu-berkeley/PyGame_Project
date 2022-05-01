@@ -1,16 +1,21 @@
 import pygame
 from pygame.locals import *
 import time
+import random
 print('hello world')
+block_size = 40
+window_size = 600
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.surface = pygame.display.set_mode((500, 500))
+        self.surface = pygame.display.set_mode((window_size, window_size))
         self.surface.fill((255, 255, 255))
-        self.snake = Snake(self.surface)
+        self.snake = Snake(self.surface, 3)
         self.snake.draw_block()
+        self.apple = Apple(self.surface)
+        self.apple.draw_apple()
 
     def run(self):
         running = True
@@ -29,33 +34,76 @@ class Game:
                         self.snake.move_left()
                 elif event.type == QUIT:
                     running = False
-            self.snake.always_move()
-            time.sleep(0.1)
+            self.draw_all()
+            time.sleep(0.3)
+
+    def draw_all(self):
+        self.snake.always_move()
+        self.apple.draw_apple()
+        if self.is_collision(self.apple.block_x, self.apple.block_y,
+                             self.snake.block_x[0], self.snake.block_y[0]):
+            self.apple.move()
+            self.snake.increase_length()
 
 
-class Snake:
+
+    def is_collision(self, apple_x, apple_y, block_x, block_y):
+        if apple_x == block_x and apple_y == block_y:
+            return True
+        else:
+            return False
+
+
+class Apple:
     def __init__(self, parent_screen):
         self.parent_screen = parent_screen
-        self.block = pygame.image.load('resources/block.jpeg').convert()
-        self.block_x = 100
-        self.block_y = 100
-        self.direction = 'up'
+        self.block = pygame.image.load('resources/apple.jpeg').convert()
+        self.block_x = block_size * random.randint(0, window_size/block_size-1)
+        self.block_y = block_size * random.randint(0, window_size/block_size-1)
 
-    def draw_block(self):
-        self.parent_screen.fill((255, 255, 255))
+    def draw_apple(self):
         self.parent_screen.blit(self.block, (self.block_x, self.block_y))
         pygame.display.flip()
         return
 
+    def move(self):
+        self.block_x = block_size * random.randint(0, window_size / block_size - 1)
+        self.block_y = block_size * random.randint(0, window_size / block_size - 1)
+
+
+class Snake:
+    def __init__(self, parent_screen, length):
+        self.parent_screen = parent_screen
+        self.length = length
+        self.block = pygame.image.load('resources/block.jpeg').convert()
+        self.block_x = [block_size] * length
+        self.block_y = [block_size] * length
+        self.direction = 'down'
+
+    def increase_length(self):
+        self.length += 1
+        self.block_x.append(self.block_x[-1])
+        self.block_y.append(self.block_y[-1])
+
+    def draw_block(self):
+        self.parent_screen.fill((255, 255, 255))
+        for block_id in range(self.length):
+            self.parent_screen.blit(self.block, (self.block_x[block_id], self.block_y[block_id]))
+        pygame.display.flip()
+        return
+
     def always_move(self):
+        for block_id in range(self.length-1, 0, -1):
+            self.block_x[block_id] = self.block_x[block_id-1]
+            self.block_y[block_id] = self.block_y[block_id-1]
         if self.direction == 'up':
-            self.block_y -= 10
+            self.block_y[0] -= block_size
         elif self.direction == 'down':
-            self.block_y += 10
+            self.block_y[0] += block_size
         elif self.direction == 'right':
-            self.block_x += 10
+            self.block_x[0] += block_size
         elif self.direction == 'left':
-            self.block_x -= 10
+            self.block_x[0] -= block_size
         self.draw_block()
 
     def move_up(self):
