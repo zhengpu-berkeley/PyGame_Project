@@ -1,68 +1,67 @@
 import pygame
 from pygame.locals import *
 print('hello world')
+print('this is the OOPfying branch')
 
 
-def draw_block():
-    surface.fill((255, 255, 255))
-    surface.blit(block, (block_x, block_y))
-    pygame.display.flip()
-    return
+class Game:
+    def __init__(self):
+        pygame.init()
+        self.surface = pygame.display.set_mode((500, 500))
+        self.surface.fill((255, 255, 255))
+        self.snake = Snake(self.surface)
+        self.snake.draw_block()
+
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        running = False
+                    elif event.key == K_UP:
+                        self.snake.move_up()
+                    elif event.key == K_DOWN:
+                        self.snake.move_down()
+                    elif event.key == K_RIGHT:
+                        self.snake.move_right()
+                    elif event.key == K_LEFT:
+                        self.snake.move_left()
+                elif event.type == QUIT:
+                    running = False
+
+
+class Snake:
+    def __init__(self, parent_screen):
+        self.parent_screen = parent_screen
+        self.block = pygame.image.load('resources/block.jpeg').convert()
+        self.block_x = 100
+        self.block_y = 100
+
+    def draw_block(self):
+        self.parent_screen.fill((255, 255, 255))
+        self.parent_screen.blit(self.block, (self.block_x, self.block_y))
+        pygame.display.flip()
+        return
+
+    def move_up(self):
+        self.block_y -= 10
+        self.draw_block()
+
+    def move_down(self):
+        self.block_y += 10
+        self.draw_block()
+
+    def move_right(self):
+        self.block_x += 10
+        self.draw_block()
+
+    def move_left(self):
+        self.block_x -= 10
+        self.draw_block()
 
 
 if __name__ == '__main__':
-    pygame.init()
-    # this creates a display of size (500,500) pixels
-    # the surface variable is the main window, the background
-    surface = pygame.display.set_mode((500,500))
-    # this modifies the color of the display to (R,G,B)
-    # we can use Google Color Picker to find what we want
-    surface.fill((255,255,255)) # (255,255,255) is white
 
-    # loading the block image into a variable called block
-    # .convert() : Creates a new copy of the Surface with the pixel format changed
-    block = pygame.image.load('resources/block.jpeg').convert()
-
-
-
-    # drawing the block onto the surface with the blit() function
-    # specify position of block with (block_x , block_y)
-    block_x , block_y = 100 , 100
-    surface.blit(block, (block_x , block_y))
-
-    # flip() : Update the full display Surface to the screen
-    pygame.display.flip()
-
-    running = True
-    while running:
-        # check out all kinds of events:
-        # https://www.pygame.org/docs/ref/event.html
-        # events like KEYDOWN, QUIT are from pygame.locals
-        # they are variables predefined...
-        for event in pygame.event.get():
-            # KEYDOWN event triggered when the keyboard buttons are pressed
-            # check out all the keys:
-            # https://www.pygame.org/docs/ref/key.html
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    running = False
-                elif event.key == K_UP:
-                    block_y -= 10
-                    draw_block()
-                elif event.key == K_DOWN:
-                    block_y += 10
-                    draw_block()
-                elif event.key == K_RIGHT:
-                    block_x += 10
-                    draw_block()
-                elif event.key == K_LEFT:
-                    block_x -= 10
-                    draw_block()
-                pass
-            # QUIT in event type means we hit the [x] to close window
-            elif event.type == QUIT:
-                running = False
-
-
-
-
+    game = Game()
+    game.run()
