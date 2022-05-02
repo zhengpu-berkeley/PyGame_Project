@@ -1,0 +1,20 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="pygame" />
+          <option value="main.KEYDOWN" />
+          <option value="main.QUIT" />
+          <option value="main.K_ESCAPE" />
+          <option value="main.K_RIGHT" />
+          <option value="main.K_UP" />
+          <option value="main.K_DOWN" />
+          <option value="main.K_LEFT" />
+          <option value="main.K_RETURN" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
